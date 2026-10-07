@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo: verde de la app, sin esquinas (el sistema las redondea) -->
+  <rect width="512" height="512" fill="#0f6b4f"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round">
+    <!-- Nevera -->
+    <rect x="166" y="96" width="180" height="320" rx="26" stroke-width="22"/>
+    <line x1="166" y1="210" x2="346" y2="210" stroke-width="22"/>
+    <line x1="306" y1="134" x2="306" y2="170" stroke-width="22"/>
+    <line x1="306" y1="248" x2="306" y2="296" stroke-width="22"/>
+    <!-- Ondas de "acercar el móvil" -->
+    <path d="M196 298 a14 14 0 0 1 0 28" stroke-width="16"/>
+    <path d="M214 284 a28 28 0 0 1 0 56" stroke-width="16"/>
+    <path d="M232 270 a42 42 0 0 1 0 84" stroke-width="16"/>
+  </g>
+</svg>
