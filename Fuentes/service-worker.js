@@ -7,7 +7,7 @@
 //
 // Al cambiar archivos de la app, sube VERSION para limpiar la caché vieja.
 
-const VERSION = 'fridgenfc-v5';
+const VERSION = 'fridgenfc-v6';
 
 const ARCHIVOS = [
   './',
@@ -42,7 +42,9 @@ self.addEventListener('fetch', (evento) => {
   if (peticion.method !== 'GET' || new URL(peticion.url).origin !== self.location.origin) return;
 
   evento.respondWith(
-    fetch(peticion)
+    // no-cache: pregunta siempre al servidor y no mezcla archivos nuevos con viejos
+    // de la caché del navegador (GitHub Pages los guarda 10 minutos).
+    fetch(peticion, { cache: 'no-cache' })
       .then((respuesta) => {
         if (respuesta.ok) {
           const copia = respuesta.clone();
