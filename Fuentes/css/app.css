@@ -49,7 +49,7 @@ body {
   padding-block: 0 calc(88px + env(safe-area-inset-bottom));
   background: var(--fondo);
   color: var(--tinta);
-  font: 17px/1.4 var(--fuente);
+  font: 19px/1.4 var(--fuente);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -96,7 +96,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   border: 0;
   background: none;
   color: var(--suave);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  text-decoration: underline;
 }
 
 .icono {
@@ -161,30 +162,36 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .anadir input {
   flex: 1;
   min-width: 0;
-  height: 48px;
-  padding: 0 56px 0 16px;
+  height: 52px;
+  padding: 0 16px;
   border: 0;
   border-radius: var(--radio);
   background: var(--campo);
   color: var(--tinta);
-  font: 400 1.0625rem var(--fuente); /* 17px: iOS no hace zoom */
+  font: 400 19px var(--fuente); /* 16px o más: iOS no hace zoom */
 }
 .anadir input::placeholder { color: var(--tenue); }
 .anadir input:focus { outline: none; }
 
 .enviar {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  margin-left: -46px;
-  padding: 0;
+  flex: none;
+  height: 52px;
+  margin-left: 8px;
+  padding: 0 18px;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--radio);
   background: var(--tinta);
   color: var(--sobre-tinta);
+  font-weight: 600;
 }
-.enviar svg { width: 18px; height: 18px; stroke-width: 2.2; }
+
+/* ── Ayuda ────────────────────────────────────────────────────────────── */
+
+.ayuda { margin: 4px 0 8px; padding: 12px 16px; border-radius: var(--radio); background: var(--campo); font-size: 1rem; }
+.ayuda summary { color: var(--suave); font-weight: 600; cursor: pointer; }
+.ayuda ol { margin: 8px 0 2px; padding-left: 22px; }
+.ayuda li { margin: 4px 0; }
+.nota-chips { margin: 0 0 6px; color: var(--suave); font-size: 0.875rem; }
 
 /* ── Lo de siempre (solo mientras escribes) ───────────────────────────── */
 
@@ -221,9 +228,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 
 .fila {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
   align-items: center;
-  min-height: 58px;
+  min-height: 66px;
   border-bottom: 1px solid var(--linea);
 }
 .fila.nueva { animation: entra 0.22s ease-out; }
@@ -234,8 +241,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .check {
   display: grid;
   place-items: center start;
-  width: 40px;
-  height: 44px;
+  width: 48px;
+  height: 52px;
   padding: 0;
   border: 0;
   background: none;
@@ -243,34 +250,35 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .caja {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 1.5px solid var(--borde);
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--suave);
   border-radius: 50%;
   color: transparent;
   transition: background 0.15s, border-color 0.15s;
 }
-.caja svg { width: 14px; height: 14px; stroke-width: 2.6; }
+.caja svg { width: 17px; height: 17px; stroke-width: 2.6; }
 .fila.hecha .caja { background: var(--tinta); border-color: var(--tinta); color: var(--sobre-tinta); }
 
 .texto { min-width: 0; padding: 10px 4px 10px 0; cursor: pointer; }
 .nombre { display: block; overflow-wrap: anywhere; }
-.meta { display: block; margin-top: 1px; color: var(--tenue); font-size: 0.8125rem; }
+.meta { display: block; margin-top: 1px; color: var(--suave); font-size: 0.875rem; }
 .fila.hecha .nombre { color: var(--tenue); text-decoration: line-through; }
 
 .quitar {
   display: grid;
   place-items: center end;
-  width: 40px;
-  height: 44px;
+  width: 48px;
+  height: 52px;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--tenue);
-  opacity: 0.6;
+  color: var(--suave);
 }
-.quitar svg { width: 16px; height: 16px; }
+.quitar svg { width: 20px; height: 20px; }
 .quitar:hover, .quitar:focus-visible { color: var(--tinta); opacity: 1; }
+
+.seccion { margin: 16px 0 2px; font-size: 1.125rem; font-weight: 700; }
 
 .vacio { margin: 0; padding: 40px 0 8px; color: var(--tenue); text-align: center; }
 
@@ -282,7 +290,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   gap: 6px;
   padding: 6px 0;
   color: var(--suave);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   list-style: none;
   cursor: pointer;
 }
@@ -359,6 +367,10 @@ dialog::backdrop { background: rgb(0 0 0 / 0.35); }
   user-select: all;
 }
 
+.qr { display: grid; place-items: center; padding: 14px; border-radius: var(--radio); background: #fff; }
+.qr svg { width: min(220px, 60vw); height: auto; }
+#boton-imprimir { width: 100%; }
+
 .pasos { display: grid; gap: 6px; margin: 0; padding-left: 20px; color: var(--suave); font-size: 0.9375rem; }
 .nfc { display: grid; gap: 10px; justify-items: start; }
 .nota { font-size: 0.875rem !important; }
@@ -393,4 +405,18 @@ dialog::backdrop { background: rgb(0 0 0 / 0.35); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ── Hoja para imprimir el QR ─────────────────────────────────────────── */
+
+.hoja-qr { display: none; }
+
+@media print {
+  body { max-width: none; padding: 0; background: #fff; color: #000; }
+  body > :not(.hoja-qr), dialog { display: none !important; }
+  .hoja-qr { display: grid; justify-items: center; gap: 8mm; padding-top: 25mm; text-align: center; }
+  .hoja-qr h1 { margin: 0; font-size: 40pt; }
+  .hoja-codigo svg { width: 110mm; height: auto; }
+  .hoja-grande { margin: 0; font-size: 22pt; font-weight: 700; line-height: 1.3; }
+  .hoja-pequena { margin: 0; font-size: 14pt; color: #444; }
 }

@@ -7,7 +7,7 @@
 //
 // Al cambiar archivos de la app, sube VERSION para limpiar la caché vieja.
 
-const VERSION = 'fridgenfc-v2';
+const VERSION = 'fridgenfc-v5';
 
 const ARCHIVOS = [
   './',
@@ -15,6 +15,7 @@ const ARCHIVOS = [
   './css/app.css',
   './js/app.js',
   './js/datos.js',
+  './js/qrcode.js',
   './js/config.js',
   './manifest.json',
   './icons/icon.svg',

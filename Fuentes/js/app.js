@@ -5,6 +5,7 @@
 
 import { SUPABASE_URL, SUPABASE_ANON_KEY, INTERVALO_REFRESCO } from './config.js';
 import { crearAlmacen, leerLocal, guardarLocal, borrarLocal } from './datos.js';
+import qrcode from './qrcode.js';
 
 const FORMATO_SALA = /^[a-z0-9]{12,32}$/;
 const ALFABETO = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -186,7 +187,7 @@ function crearFila(item) {
 function pintarSubtitulo(cuantas, estado, pendientes) {
   $('#estado').dataset.estado = estado;
   const texto = $('#estado-texto');
-  texto.textContent = cuantas ? `${cuantas} ${cuantas === 1 ? 'cosa' : 'cosas'}` : 'Nada que comprar';
+  texto.textContent = cuantas ? `${cuantas} ${cuantas === 1 ? 'cosa' : 'cosas'} por comprar` : 'No falta nada';
   const problema = TEXTO_ESTADO[estado];
   if (problema) {
     const aviso = document.createElement('span');
@@ -237,6 +238,7 @@ function pintar() {
   const faltaFiltrado = ui.filtro ? falta.filter((i) => i.added_by === ui.filtro) : falta;
   $('#lista-falta').replaceChildren(...faltaFiltrado.map(crearFila));
   $('#vacio').hidden = falta.length > 0;
+  $('#titulo-falta').hidden = falta.length === 0;
 
   $('#bloque-comprado').hidden = comprado.length === 0;
   $('#cuenta-comprado').textContent = comprado.length;
@@ -275,7 +277,6 @@ function pintarSugerencias() {
 }
 
 function alEscribir() {
-  $('#boton-anadir').hidden = !$('#campo-nuevo').value.trim();
   pintarSugerencias();
 }
 
@@ -385,7 +386,7 @@ function mostrarBienvenida() {
   $('#bienvenida-texto').textContent = deEnlace
     ? 'Ponle un nombre para reconocerla en este móvil y di quién eres. Verás lo mismo que el resto de tu casa.'
     : 'Ponle un nombre y di quién eres. Después podrás guardar el enlace en un sticker NFC.';
-  $('#campo-nombre-lista').value = 'Nevera';
+  $('#campo-nombre-lista').value = 'Compra';
   $('#campo-yo').value = leerLocal('yo', '');
   abrirDialogo('dialogo-bienvenida');
 }
@@ -393,12 +394,30 @@ function mostrarBienvenida() {
 function mostrarCompartir() {
   const enlace = enlaceDeLista(sala);
   $('#enlace-lista').textContent = enlace;
+  $('#qr').innerHTML = svgQr(enlace);
   $('#boton-copiar').textContent = 'Copiar enlace';
   $('#boton-enviar').hidden = !navigator.share;
   const hayNfc = 'NDEFReader' in window;
   $('#nfc-directo').hidden = !hayNfc;
   $('#nfc-pasos').hidden = hayNfc;
   abrirDialogo('dialogo-compartir');
+}
+
+// QR del enlace como SVG (nítido en pantalla y al imprimir).
+function svgQr(texto) {
+  const qr = qrcode(0, 'M');
+  qr.addData(texto);
+  qr.make();
+  return qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+}
+
+function imprimirQr() {
+  const enlace = enlaceDeLista(sala);
+  $('#hoja-nombre').textContent = nombreDeLista(sala);
+  $('#hoja-codigo').innerHTML = svgQr(enlace);
+  $('#dialogo-compartir').close();
+  // Un instante para que se cierre el diálogo antes de abrir la impresión.
+  setTimeout(() => window.print(), 100);
 }
 
 async function copiarEnlace() {
@@ -492,6 +511,13 @@ function conectarEventos() {
   $('#lista-falta').addEventListener('click', alPulsarLista);
   $('#lista-comprado').addEventListener('click', alPulsarLista);
 
+  // La ayuda se queda cerrada si alguien la cierra en este móvil.
+  const ayuda = $('#ayuda');
+  try { if (localStorage.getItem('fridgenfc_ayuda') === 'cerrada') ayuda.open = false; } catch {}
+  ayuda.addEventListener('toggle', () => {
+    try { localStorage.setItem('fridgenfc_ayuda', ayuda.open ? 'abierta' : 'cerrada'); } catch {}
+  });
+
   $('#boton-vaciar').addEventListener('click', () => {
     const ids = ui.foto.items.filter((i) => i.done && !ui.ocultos.has(i.id)).map((i) => i.id);
     if (ids.length) borrarConDeshacer(ids, `Vaciado: ${ids.length} ${ids.length === 1 ? 'cosa' : 'cosas'}`);
@@ -499,6 +525,7 @@ function conectarEventos() {
 
   $('#boton-compartir').addEventListener('click', mostrarCompartir);
   $('#boton-copiar').addEventListener('click', copiarEnlace);
+  $('#boton-imprimir').addEventListener('click', imprimirQr);
   $('#boton-enviar').addEventListener('click', () => {
     navigator.share?.({ title: nombreDeLista(sala), url: enlaceDeLista(sala) }).catch(() => {});
   });
@@ -509,7 +536,7 @@ function conectarEventos() {
 
   $('#form-bienvenida').addEventListener('submit', (evento) => {
     evento.preventDefault();
-    guardarLista(sala, limpiar($('#campo-nombre-lista').value) || 'Nevera');
+    guardarLista(sala, limpiar($('#campo-nombre-lista').value) || 'Compra');
     guardarLocal('yo', limpiar($('#campo-yo').value));
     cerrarDialogo('dialogo-bienvenida');
     pintar();

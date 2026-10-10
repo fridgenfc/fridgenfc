@@ -34,28 +34,38 @@
 
   <form class="anadir" id="form-anadir" autocomplete="off">
     <label class="solo-lector" for="campo-nuevo">Qué falta</label>
-    <input id="campo-nuevo" name="nuevo" type="text" maxlength="60" placeholder="Añadir…" enterkeyhint="done" autocapitalize="sentences" spellcheck="false">
-    <button class="enviar" id="boton-anadir" type="submit" aria-label="Añadir" hidden>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
-    </button>
+    <input id="campo-nuevo" name="nuevo" type="text" maxlength="60" placeholder="¿Qué falta?" enterkeyhint="done" autocapitalize="sentences" spellcheck="false">
+    <button class="enviar" id="boton-anadir" type="submit">Apuntar</button>
   </form>
 
   <div class="sugerencias" id="sugerencias" hidden>
+    <p class="nota-chips">Lo de siempre (toca para apuntar):</p>
     <div class="chips" id="lista-sugerencias" role="group" aria-label="Lo de siempre"></div>
   </div>
 
+  <!-- Ayuda para quien no está acostumbrado: abierta hasta que se cierra -->
+  <details class="ayuda" id="ayuda" open>
+    <summary>¿Cómo funciona?</summary>
+    <ol>
+      <li>Escribe lo que <b>falta en casa</b> y toca <b>Apuntar</b>.</li>
+      <li>Cuando lo compres, toca el <b>círculo</b> ◯ y se tacha.</li>
+      <li>La <b>✕</b> lo borra (si te equivocas, toca <b>Deshacer</b>).</li>
+    </ol>
+  </details>
+
   <main>
     <div class="filtro" id="filtro" hidden role="group" aria-label="Filtrar por persona"></div>
-    <ul class="lista" id="lista-falta" aria-label="Falta"></ul>
-    <p class="vacio" id="vacio" hidden>Nada que comprar</p>
+    <h2 class="seccion" id="titulo-falta" hidden>🛒 Hay que comprar</h2>
+    <ul class="lista" id="lista-falta" aria-label="Hay que comprar"></ul>
+    <p class="vacio" id="vacio" hidden>No falta nada 🎉<br>Cuando veas que falta algo, escríbelo arriba.</p>
 
     <details class="comprado" id="bloque-comprado" hidden>
       <summary>
-        Comprado <span class="cuenta" id="cuenta-comprado">0</span>
+        ✅ Ya comprado <span class="cuenta" id="cuenta-comprado">0</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
       </summary>
-      <ul class="lista" id="lista-comprado" aria-label="Comprado"></ul>
-      <button class="texto-boton" id="boton-vaciar" type="button">Vaciar</button>
+      <ul class="lista" id="lista-comprado" aria-label="Ya comprado"></ul>
+      <button class="texto-boton" id="boton-vaciar" type="button">Borrar todo lo ya comprado</button>
     </details>
   </main>
 
@@ -71,7 +81,7 @@
       <p id="bienvenida-texto"></p>
       <label class="campo" for="campo-nombre-lista">
         Nombre de la lista
-        <input id="campo-nombre-lista" type="text" maxlength="30" required placeholder="Nevera, despensa…">
+        <input id="campo-nombre-lista" type="text" maxlength="30" required placeholder="Compra, despensa…">
       </label>
       <label class="campo" for="campo-yo">
         Tu nombre
@@ -86,15 +96,17 @@
   <!-- Compartir y sticker NFC -->
   <dialog id="dialogo-compartir" aria-labelledby="compartir-titulo">
     <div class="dialogo-cuerpo">
-      <h2 id="compartir-titulo">Compartir esta lista</h2>
-      <p>Quien tenga este enlace puede ver y editar la lista. Guárdalo en un sticker NFC y se abrirá al acercar el móvil.</p>
-      <code class="enlace-lista" id="enlace-lista"></code>
+      <h2 id="compartir-titulo">Compartir con tu familia</h2>
+      <p>Que apunten la cámara del móvil a este código y verán esta misma lista. Solo la ve quien tenga el código o el enlace.</p>
+      <div class="qr" id="qr" aria-label="Código QR de esta lista" role="img"></div>
+      <button class="boton-principal" id="boton-imprimir" type="button">Imprimir QR para la nevera</button>
       <div class="acciones">
-        <button class="boton-principal" id="boton-copiar" type="button">Copiar enlace</button>
-        <button class="boton-borde" id="boton-enviar" type="button" hidden>Enviar…</button>
+        <button class="boton-borde" id="boton-enviar" type="button" hidden>Enviar enlace…</button>
+        <button class="boton-borde" id="boton-copiar" type="button">Copiar enlace</button>
       </div>
+      <code class="enlace-lista" id="enlace-lista"></code>
 
-      <h3 class="etiqueta">Sticker NFC</h3>
+      <h3 class="etiqueta">Sticker NFC (opcional)</h3>
       <div class="nfc" id="nfc-directo" hidden>
         <button class="boton-borde" id="boton-nfc" type="button">Grabar en un sticker</button>
         <p class="nota" id="nfc-estado">Pulsa el botón y acerca el sticker a la parte trasera del móvil.</p>
@@ -136,6 +148,14 @@
       </div>
     </form>
   </dialog>
+
+  <!-- Hoja que sale al imprimir: QR grande para pegar en la nevera -->
+  <section class="hoja-qr" id="hoja-qr" aria-hidden="true">
+    <h1 id="hoja-nombre">Compra</h1>
+    <div class="hoja-codigo" id="hoja-codigo"></div>
+    <p class="hoja-grande">📷 Apunta con la cámara del móvil<br>para ver la lista de la compra</p>
+    <p class="hoja-pequena">Ahí apuntas lo que falta en casa y tachas lo que compras.</p>
+  </section>
 
 </body>
 </html>
